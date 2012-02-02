@@ -1,0 +1,92 @@
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<title>TokShow Layout Test</title>
+		<style type="text/css" media="screen">
+			body {
+				background: url('/opentok/assets/img/tokshow/bg_small.jpg') no-repeat;
+				padding: 0;
+				margin: 0;
+			}
+			
+			#layout {
+				width: 520px;
+				height: 265px;
+				padding: 0;
+				margin: 20px 0 0 0;
+			}
+			
+			#layout > .swfContainer {
+				background-color: rgba(0, 0, 0, 0.4);
+				-moz-border-radius: 3px;
+				border-radius: 3px;
+				box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+			    -webkit-box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+			    -moz-box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+				padding: 10px;
+				margin: 5px;
+			}
+		</style>
+		<script src="http://code.jquery.com/jquery-1.6.2.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="animate.js" type="text/javascript" charset="utf-8"></script>
+		<script src="layoutContainer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="http://staging.opentok.com/v0.91/js/TB.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			var sessionId = "2204468c5f55466fc2937c960b930235c5c911f6"; //"2_MX44MTExMTEzfn4yMDEyLTAyLTAxIDIzOjIzOjI5LjIzNzUzMyswMDowMH4wLjg3Mjk5ODc0MjkzMn4"
+			var myStream;
+			var subscribers = [];
+			
+			TB.setLogLevel(TB.DEBUG);
+			var session = TB.initSession(sessionId);
+			
+			session.addEventListener("sessionConnected", function(event) {
+				session.publish($("#layout").createElement());		// Start publishing
+				layout(false);					// Tell the layout container to lay itself out
+			});
+			
+			session.addEventListener("streamCreated", function(event) {
+				if (event.streams[0].connection.connectionId == session.connection.connectionId) {
+					myStream = event.streams[0];		// Store my own stream to subscribe to it later
+					$(".button").show();				// Show the add and remove buttons
+				}
+			});
+			session.connect("1127", "devtoken");
+			
+			function add() {
+				subscribers.push(session.subscribe(myStream, $("#layout").createElement()));		// Subscribe to me
+				layout(true);				// Tell the layout container to lay itself out and animate
+			}
+			
+			function remove() {
+				if (subscribers && subscribers.length > 0) {
+					var subscriber = subscribers.pop();
+					var parent = document.getElementById(subscriber.id).parentNode;
+					session.unsubscribe(subscriber);
+				 	parent.parentNode.removeChild(parent);
+					layout(true);			// Tell the layout container to lay itself out and animate
+				}
+			}
+			
+			function layout(animate) {
+				var ratio = $("#layout > .swfContainer").length >= 3 ? 4/3 : 3/4;
+				$("#layout").layout(animate, ratio);
+			}
+			
+			
+			
+			// function createElement() {
+			// 				$("#layout").append($("\
+			// 				<div class='swfContainer'\
+			// 				"))
+			// 			}
+			// 			
+			
+		</script>
+	</head>
+	<body>
+		<div id="layout">
+		</div>
+		<input type="submit" name="add" class="button" value="Add" id="add" onclick="add()" style="display:none">
+		<input type="submit" name="remove" class="button" value="Remove" id="remove" onclick="remove()" style="display:none">
+	</body>
+</html>
