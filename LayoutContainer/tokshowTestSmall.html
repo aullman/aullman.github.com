@@ -68,7 +68,18 @@
 			}
 			
 			function layout(animate) {
-				var ratio = $("#layout > .swfContainer").length = 3 ? 4/3 : 3/4;
+				var ratio =  3/4;
+				switch ($("#layout > .swfContainer").length) {
+					case 4:
+						$("#layout").width(400);
+						$("#layout").css("marginLeft", "61px");
+						break;
+					case 3:
+						ratio = 4/3;
+					default: 
+						$("#layout").width(520);
+						$("#layout").css("marginLeft", "1px");
+				}
 				$("#layout").layout(animate, ratio);
 			}
 			
