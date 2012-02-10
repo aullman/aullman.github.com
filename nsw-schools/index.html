@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>NSW Schools</title>
+	<meta name="generator" content="TextMate http://macromates.com/">
+	<meta name="author" content="Adam Ullman">
+	<!-- Date: 2007-09-04 -->
+	<link href="schools.js" type="application/json" rel="exhibit/data" />
+
+	<script src="http://static.simile.mit.edu/exhibit/api-2.0/exhibit-api.js"
+	        type="text/javascript"></script>
+	<!--<script src="http://static.simile.mit.edu/exhibit/extensions-2.0/time/time-extension.js"
+	  		type="text/javascript"></script>-->
+	<script src="http://static.simile.mit.edu/exhibit/extensions-2.0/map/map-extension.js?gmapkey=ABQIAAAAVy0DAmkqwjz3shYmp8t3oBRy3otCF8NypdXuO6mxliKn5ygvAxTHfBkmSoG_exKlrB5bo4ZGijTAig"></script>
+	<script type="text/javascript">
+        // var rowStyler = function(item, database, tr) {
+        //     var party = database.getObject(item, "party");
+        //     var color = "#FFFFFF";
+        //     switch (party) {
+        //     case "Labor":    	            color = "#E4B9B3"; break;
+        //     case "Liberal":   				color = "#CADBF0"; break;
+        //     case "Nationalist":             color = "#FFDFA1"; break;
+        //     case "United Australia":        color = "#D6D6D6"; break;
+        //     }
+        //     tr.style.background = color;
+        // };
+    </script>
+	
+	<style>
+	   body {
+	       margin: 1in;
+	   }
+	   table.premiers {
+	       border:     1px solid #ddd;
+	       padding:    0.5em;
+	   }
+	   div.name {
+	       font-weight: bold;
+	       font-size:   120%;
+	   }
+	   .discipline {
+	   }
+	   .dates {
+	       font-style:  italic;
+	   }
+	   .party {
+	       color:  #888;
+	   }
+	</style>
+
+</head>
+<body>
+		<h1>NSW Schools</h1>
+		<div ex:role="collection" ex:itemTypes="PubSchool,PrivSchool,PreSchool"></div>
+		 <table width="100%">
+	        <tr valign="top">
+	            <td ex:role="viewPanel">
+				<!--	<div ex:role="view"
+						ex:label="Details"
+						ex:orders=".rank"
+						ex:showAll="true"
+						ex:grouped="false"
+						ex:formats="date { template: 'dd/MM/yyyy'; show: date}"
+						ex:possibleOrders=".rank, .type, .suburb, .label">
+					<table ex:role="lens" class="premiers">
+					     <tr>
+							 <td width="1"><img ex:src-content=".picture"></td>
+					         <td>
+								<div ex:content=".label" class="name"></div>
+								<div>
+								Terms: <span ex:content="count(.term)"></span>
+								</div>
+								<div>
+								Lived: <span ex:content=".birthDeath" class="dates"></span> 
+								</div>
+								<div>
+								Born: <span ex:content=".birthPlace" class="dates"></span>
+								</div>
+								<div ex:if-exists=".party">Party: 
+								    <span ex:content=".party"></span>
+								</div>
+					         </td>
+					     </tr>
+					 </table>
+					</div> -->
+					<!-- <div ex:role="view"
+						ex:viewClass="TimelineView"
+						ex:label="Timeline"
+						ex:start=".startDate"
+						ex:end=".endDate"
+						ex:topBandUnit="year"
+						ex:topBandPixelsPerUnit="100"
+						ex:bottomBandUnit="decade"
+						ex:bottomBandPixelsPerUnit="100"
+						ex:proxy=".term"
+						ex:marker=".party"
+						ex:formats="date { template: 'dd/MM/yyyy'; show: date}">
+						<div ex:role="lens">
+							<div><img ex:src-content=".picture"></div>
+							<strong><span ex:content=".label"></span></strong><br/>
+							<strong>Party:</strong> <span ex:content=".party"></span><br/>
+							<strong>Terms:</strong> <span ex:content="count(.term)"></span><br/>
+							<strong>Assumed Office:</strong> <span ex:content=".term.startDate"></span><br/>
+							<strong>Left Office: </strong><span ex:content=".term.endDate"></span>
+						</div>
+					</div> -->
+					<div ex:role="view"
+						ex:viewClass="Map"
+						ex:label="Locations"
+						ex:latlng=".latlong"
+						ex:marker=".type"
+						ex:center="-33.8493184352578, 151.20826721191406"
+						ex:zoom="10">
+						<div ex:role="lens">
+							<strong><span ex:content=".label"></span></strong><br/>
+							Type: <span ex:content=".type"></span><br>
+							<div ex:if-exists=".rank">
+								Rank: <a href='http://www.smh.com.au/interactive/2010/schools_data%20/Primary%20Top%2050s%20(2).pdf' target="_blank"><span ex:content=".rank"></span></a><br/>
+							</div>
+							<div ex:if-exists=".numeracyRank">
+								Numeracy Rank: <a href='http://www.smh.com.au/interactive/2010/schools_data%20/Primary%20Top%2050s%20(2).pdf' target="_blank"><span ex:content=".numeracyRank"></span></a><br/>
+							</div>
+							<div ex:if-exists=".writingRank">
+								Writing Rank: <a href='http://www.smh.com.au/interactive/2010/schools_data%20/Primary%20Top%2050s%20(2).pdf' target="_blank"><span ex:content=".writingRank"></span></a><br/>
+							</div>
+							<div ex:if-exists=".readingRank">
+								Reading Rank: <a href='http://www.smh.com.au/interactive/2010/schools_data%20/Primary%20Top%2050s%20(2).pdf' target="_blank"><span ex:content=".readingRank"></span></a><br/>
+							</div>
+							<div ex:if-exists=".spellingRank">
+								Spelling Rank: <a href='http://www.smh.com.au/interactive/2010/schools_data%20/Primary%20Top%2050s%20(2).pdf' target="_blank"><span ex:content=".spellingRank"></span></a><br/>
+							</div>
+							<div ex:if-exists=".grammarRank">
+								Grammar Rank: <a href='http://www.smh.com.au/interactive/2010/schools_data%20/Primary%20Top%2050s%20(2).pdf' target="_blank"><span ex:content=".grammarRank"></span></a><br/>
+							</div>
+							<div ex:if-exists=".hours">
+								Hours: <span ex:content=".hours"></span><br/>
+							</div>
+							<div ex:if-exists=".cost">
+								Hours: <span ex:content=".cost"></span><br/>
+							</div>
+							Suburb: <span ex:content=".suburb"></span><br>
+							<div ex:if-exists=".infoURL">
+								<a ex:href-content=".infoURL">More Info</a>
+							</div>
+							
+						</div>
+					</div>
+					<div ex:role="view"
+						ex:label="Table"
+						ex:viewClass="TabularView"
+						ex:columns=".label, .rank, .suburb, .type"
+						ex:columnLabels="name, rank, suburb, type"
+						ex:sortAscending="true"
+						ex:formats="date { template: 'dd/MM/yyyy'; show: date}"
+						ex:sortColumn="1">
+					</div>
+	            </td>
+				<td width="25%">
+					 <!-- Live Search: <div ex:role="facet" ex:facetClass="TextSearch"></div> -->
+					 <div ex:role="facet" ex:expression=".type" ex:facetLabel="Type"></div>
+				</td>
+	        </tr>
+	    </table>
+</body>
+</html>
