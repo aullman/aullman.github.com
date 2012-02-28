@@ -10,8 +10,13 @@
 			.red {
 				background-color: red;
 			}
-			.blue {
-				background-color: blue;
+			.ignore {
+				background-color: grey;
+				width: 100px;
+				height: 100px;
+				left: 200px;
+				top: 50px;
+				position:absolute;
 			}
 			.orange {
 				background-color: orange;
@@ -25,7 +30,7 @@
 		<script src="layoutContainer.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
 			$(document).ready(function() {
-				$("#layoutContainer").layout(true, 9/16, ["blue"]);
+				$("#layoutContainer").layout(true, 9/16, ["ignore"]);
 			});
 			
 		</script>
@@ -35,14 +40,14 @@
 			<div class="red">
 				<span>Red</span>
 			</div>
-			<div class="blue">
-				<span>Blue</span>
-			</div>
 			<div class="orange">
 				<span>Orange</span>
 			</div>
 			<div class="purple">
 				<span>Purple</span>
+			</div>
+			<div class="ignore">
+				<span>Ignore Me</span>
 			</div>
 		</div>
 	</body>
