@@ -30,7 +30,17 @@
 		<script src="layoutContainer.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
 			$(document).ready(function() {
-				$("#layoutContainer").layout(true, 9/16, ["ignore"]);
+				$("#layoutContainer").layout({
+					animate: true,
+					duration: 2000,
+					ratio: 9/16,
+					ignoreClasses: ["ignore"],
+					complete: function() {
+						$("#layoutContainer > div:not(.ignore)").each(function(index) {
+							console.log($(this).width() + " " + $(this).height());
+						});
+					}
+				});
 			});
 			
 		</script>

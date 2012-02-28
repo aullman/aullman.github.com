@@ -7,7 +7,7 @@
 	 *	and Subscriber widgets.
 	 */	
 	
-	function NumericAnimator(that, fromValue, targetValue, duration) {
+	function NumericAnimator(that, fromValue, targetValue, duration, callback) {
 		if (duration == "fast") duration = 100;
 		if (duration == "slow") duration = 500;
 		var speed = 13;
@@ -36,6 +36,7 @@
 
 			if (this.getCurrentValue() == targetValue) {
 				this.stop();
+				if (callback) callback();
 				return;
 			}
 
@@ -50,9 +51,9 @@
 		};
 	}
 
-	function Resizer (that, targetValue, duration, isWidth) {
+	function Resizer (that, targetValue, duration, isWidth, callback) {
 		this.parentClass = NumericAnimator;
-		this.parentClass(that, isWidth ? $(that).width() : $(that).height(), targetValue, duration);
+		this.parentClass(that, isWidth ? $(that).width() : $(that).height(), targetValue, duration, callback);
 
 		var superSetCurrentValue = this.setCurrentValue;
 		this.setCurrentValue = function(value) {
@@ -65,9 +66,9 @@
 		};
 	}
 
-	function Mover (that, targetValue, duration, cssKey) {
+	function Mover (that, targetValue, duration, cssKey, callback) {
 		this.parentClass = NumericAnimator;
-		this.parentClass(that, $(that).position()[cssKey], targetValue, duration);
+		this.parentClass(that, $(that).position()[cssKey], targetValue, duration, callback);
 
 		var superSetCurrentValue = this.setCurrentValue;
 		this.setCurrentValue = function(value) {
@@ -83,11 +84,11 @@
 	 *	height - The height to resize to
 	 *	duration - The duration the animation should take to execute in milliseconds
 	 */
-	$.fn.resizeSWF = function(width, height, duration) {
+	$.fn.resizeSWF = function(width, height, duration, callback) {
 		
 		this.each(function() {
-			var widthResizer = new Resizer(this, width, duration, true);
-			var heightResizer = new Resizer(this, height, duration, false);
+			var widthResizer = new Resizer(this, width, duration, true, callback);
+			var heightResizer = new Resizer(this, height, duration, false, callback);
 			widthResizer.start();
 			heightResizer.start();
 		});
@@ -102,11 +103,11 @@
 	 *	y - The y (top) position to move to
 	 *	duration - The duration the animation should take to execute in milliseconds
 	 */
-	$.fn.moveSWF = function(x, y, duration) {
+	$.fn.moveSWF = function(x, y, duration, callback) {
 		
 		this.each(function() {
-			var xMover = new Mover(this, x, duration, "left");
-			var yMover = new Mover(this, y, duration, "top");
+			var xMover = new Mover(this, x, duration, "left", callback);
+			var yMover = new Mover(this, y, duration, "top", callback);
 			xMover.start();
 			yMover.start();
 		});

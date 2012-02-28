@@ -7,9 +7,34 @@
 	 *
 	 *	animate - Boolean value whether to animate the transition to the new layout.
 	 */
-	$.fn.layout = function(animate, vid_ratio, ignoreClasses) {
-	    // Aspect ratio of the streams
-        if (!vid_ratio) vid_ratio = 3/4;
+	$.fn.layout = function(params) {
+		var animate = params.animate || false;
+		// Aspect ratio of the streams
+		var vid_ratio = params.ratio || 3/4;
+		var ignoreClasses = params.ignoreClasses || [];
+		var duration = params.duration || 200;
+		
+		// Register callbacks for every animation callback and when they all fire we call
+		// the params.complete method
+		var callbacks = [];
+		var completed = false;
+		var addCallback = function() {
+			var callback = function() {
+				for (var i=0; i < callbacks.length; i++) {
+					if (callbacks[i] == callback) {
+						callbacks.splice(i, 1);
+						break;
+					}
+				};
+				if (callbacks.length == 0 && params.complete && typeof(params.complete) == "function" && !completed) {
+					completed = true;
+					params.complete();
+				}
+			};
+			callbacks.push(callback);
+			
+			return callback;
+		};
         
 		this.each(function() {
 			var subscriberBox = this;
@@ -20,11 +45,9 @@
 
 			// Finds the ideal number of columns and rows to minimize the amount of wasted space
 			var childSelector = ">*";
-			if (ignoreClasses) {
-				for (var i=0; i < ignoreClasses.length; i++) {
-					childSelector += ":not(." + ignoreClasses[i] + ")";
-				};
-			}
+			for (var i=0; i < ignoreClasses.length; i++) {
+				childSelector += ":not(." + ignoreClasses[i] + ")";
+			};
 			var count = $(this).find(childSelector).length;
 			var min_diff;
 			var targetCols;
@@ -87,8 +110,8 @@
 
 				// Set position and size of the stream container
 				if (animate && $(elem).moveSWF) {
-					$(elem).moveSWF(x, y, 200);
-					$(elem).resizeSWF(actualWidth, actualHeight, 200);
+					$(elem).moveSWF(x, y, duration, addCallback());
+					$(elem).resizeSWF(actualWidth, actualHeight, duration, addCallback());
 				} else {
 					$(elem).css(targetPosition);
 				}
@@ -101,6 +124,9 @@
 				}
 			});
 		});
+		
+		// If we didn't animate then just call the callback straight away
+		if (!animate && params.complete) params.complete();
 		
 		return this;
 	};
