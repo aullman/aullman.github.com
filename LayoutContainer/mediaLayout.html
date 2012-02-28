@@ -1,0 +1,49 @@
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<title>mediaLayout</title>
+		<style type="text/css" media="screen">
+			#layoutContainer {
+				width: 500px;
+				height: 300px;
+			}
+			.red {
+				background-color: red;
+			}
+			.blue {
+				background-color: blue;
+			}
+			.orange {
+				background-color: orange;
+			}
+			.purple {
+				background-color: purple;
+			}
+		</style>
+		<script src="http://code.jquery.com/jquery-1.6.2.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="animate.js" type="text/javascript" charset="utf-8"></script>
+		<script src="layoutContainer.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				$("#layoutContainer").layout(true, 9/16, ["blue"]);
+			});
+			
+		</script>
+	</head>
+	<body>
+		<div id="layoutContainer">
+			<div class="red">
+				<span>Red</span>
+			</div>
+			<div class="blue">
+				<span>Blue</span>
+			</div>
+			<div class="orange">
+				<span>Orange</span>
+			</div>
+			<div class="purple">
+				<span>Purple</span>
+			</div>
+		</div>
+	</body>
+</html>

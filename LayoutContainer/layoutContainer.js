@@ -7,19 +7,25 @@
 	 *
 	 *	animate - Boolean value whether to animate the transition to the new layout.
 	 */
-	$.fn.layout = function(animate, vid_ratio) {
+	$.fn.layout = function(animate, vid_ratio, ignoreClasses) {
 	    // Aspect ratio of the streams
         if (!vid_ratio) vid_ratio = 3/4;
         
 		this.each(function() {
 			var subscriberBox = this;
 			// get the size of the container
-			Width = $(subscriberBox).width();
-			Height = $(subscriberBox).height();
+			var Width = $(subscriberBox).width();
+			var Height = $(subscriberBox).height();
 			$(subscriberBox).css("position", "relative");
 
 			// Finds the ideal number of columns and rows to minimize the amount of wasted space
-			var count = subscriberBox.children.length;
+			var childSelector = ">*";
+			if (ignoreClasses) {
+				for (var i=0; i < ignoreClasses.length; i++) {
+					childSelector += ":not(." + ignoreClasses[i] + ")";
+				};
+			}
+			var count = $(this).find(childSelector).length;
 			var min_diff;
 			var targetCols;
 			var targetRows;
@@ -57,7 +63,7 @@
 			// Loop through each stream in the container and place it inside
 			var x = 0;
 			var y = 0;
-			for (i=0; i < subscriberBox.children.length; i++) {
+			$(this).find(childSelector).each(function(i, elem) {
 				if (i % targetCols == 0) {
 					// We are the first element of the row
 					x = firstColMarginLeft;
@@ -67,14 +73,11 @@
 					x += targetWidth;
 				}
 
-				var parent = subscriberBox.children[i];
-				var child = subscriberBox.children[i].firstChild;
-
-				$(parent).css("position", "absolute");
-                var actualWidth = targetWidth - parseInt($(parent).css("paddingLeft"), 10) - parseInt($(parent).css("paddingRight"), 10) - 
-                                    parseInt($(parent).css("marginLeft"), 10) - parseInt($(parent).css("marginRight"), 10);
-                var actualHeight = targetHeight - parseInt($(parent).css("paddingTop"), 10) - parseInt($(parent).css("paddingBottom"), 10) -
-                                    parseInt($(parent).css("marginTop"), 10) - parseInt($(parent).css("marginBottom"), 10);
+				$(elem).css("position", "absolute");
+                var actualWidth = targetWidth - parseInt($(elem).css("paddingLeft"), 10) - parseInt($(elem).css("paddingRight"), 10) - 
+                                    parseInt($(elem).css("marginLeft"), 10) - parseInt($(elem).css("marginRight"), 10);
+                var actualHeight = targetHeight - parseInt($(elem).css("paddingTop"), 10) - parseInt($(elem).css("paddingBottom"), 10) -
+                                    parseInt($(elem).css("marginTop"), 10) - parseInt($(elem).css("marginBottom"), 10);
 				var targetPosition = {
 					left: x + "px",
 					top: y + "px",
@@ -83,17 +86,20 @@
 				};
 
 				// Set position and size of the stream container
-				if (animate) {
-					$(parent).moveSWF(x, y, 200);
-					$(parent).resizeSWF(actualWidth, actualHeight, 200);
+				if (animate && $(elem).moveSWF) {
+					$(elem).moveSWF(x, y, 200);
+					$(elem).resizeSWF(actualWidth, actualHeight, 200);
 				} else {
-					$(parent).css(targetPosition);
+					$(elem).css(targetPosition);
 				}
 
-				// Set the height and width of the flash object (stream) that sits in the contaienr
-				child.width = actualWidth;
-				child.height = actualHeight;
-			};
+				// Set the height and width of the flash object (stream) that sits in the container
+				var obj = $(elem).find("object") ? $(elem).find("object") : $(elem).find("embed");
+				if (obj && obj.length > 0) {
+					obj[0].width = actualWidth;
+					obj[0].height = actualHeight;
+				}
+			});
 		});
 		
 		return this;
