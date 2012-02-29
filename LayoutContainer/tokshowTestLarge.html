@@ -69,7 +69,7 @@
 			
 			function layout(animate) {
 				var ratio = $("#layout > .swfContainer").length >= 4 ? 4/3 : 3/4;
-				$("#layout").layout(animate, ratio);
+				$("#layout").layout({animate:animate, ratio:ratio});
 			}
 			
 			
