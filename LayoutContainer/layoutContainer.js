@@ -13,6 +13,8 @@
 		var vid_ratio = params.ratio || 3/4;
 		var ignoreClasses = params.ignoreClasses || [];
 		var duration = params.duration || 200;
+		var bigClass = params.bigClass || "big";
+		var bigRatio = params.bigRatio || 3/4;
 		
 		// Register callbacks for every animation callback and when they all fire we call
 		// the params.complete method
@@ -35,16 +37,49 @@
 			
 			return callback;
 		};
+		
+		var bigElem = this.find(">.big");
+		var offsetLeft = 0;
+		var offsetTop = 0;
+		if (bigElem.length > 0) {
+			var availRatio = this.height() / this.width();
+			// We have a big element to deal with
+			var bigWidth;
+			var bigHeight;
+			if (availRatio > bigRatio) {
+				// Size the big element to be the whole width and figure out the height based on ratio
+				bigWidth = this.width();
+				bigHeight = offsetTop = Math.floor(bigWidth * bigRatio);
+			} else if (availRatio < bigRatio) {
+				// Size the big element to be the whole height
+				bigHeight = this.height();
+				bigWidth = offsetLeft = Math.floor(bigHeight / bigRatio);
+			} else {
+				// They are equal so we need to leave some space for the other elements
+				bigHeight = Math.floor(this.height() * 0.75);	// 75% of the height
+				bigWidth = offsetLeft = Math.floor(bigHeight / bigRatio);
+			}
+			
+			if (animate && bigElem.moveSWF) {
+				bigElem.moveSWF(0, 0, duration, addCallback());
+				bigElem.resizeSWF(bigWidth, bigHeight, duration, addCallback());
+			} else {
+				bigElem.height(bigHeight).width(bigWidth).css({
+					top: "0px",
+					left: "0px"
+				});
+			}
+		}
         
 		this.each(function() {
 			var subscriberBox = this;
 			// get the size of the container
-			var Width = $(subscriberBox).width();
-			var Height = $(subscriberBox).height();
+			var Width = $(subscriberBox).width() - offsetLeft;
+			var Height = $(subscriberBox).height() - offsetTop;
 			$(subscriberBox).css("position", "relative");
 
 			// Finds the ideal number of columns and rows to minimize the amount of wasted space
-			var childSelector = ">*";
+			var childSelector = ">*:not(." + bigClass + ")";
 			for (var i=0; i < ignoreClasses.length; i++) {
 				childSelector += ":not(." + ignoreClasses[i] + ")";
 			};
@@ -101,18 +136,19 @@
                                     parseInt($(elem).css("marginLeft"), 10) - parseInt($(elem).css("marginRight"), 10);
                 var actualHeight = targetHeight - parseInt($(elem).css("paddingTop"), 10) - parseInt($(elem).css("paddingBottom"), 10) -
                                     parseInt($(elem).css("marginTop"), 10) - parseInt($(elem).css("marginBottom"), 10);
-				var targetPosition = {
-					left: x + "px",
-					top: y + "px",
-					width: actualWidth + "px",
-					height: actualHeight + "px"
-				};
 
 				// Set position and size of the stream container
 				if (animate && $(elem).moveSWF) {
-					$(elem).moveSWF(x, y, duration, addCallback());
+					$(elem).moveSWF(x + offsetLeft, y + offsetTop, duration, addCallback());
 					$(elem).resizeSWF(actualWidth, actualHeight, duration, addCallback());
 				} else {
+					var targetPosition = {
+						left: (x + offsetLeft) + "px",
+						top: (y + offsetTop) + "px",
+						width: actualWidth + "px",
+						height: actualHeight + "px"
+					};
+					
 					$(elem).css(targetPosition);
 				}
 

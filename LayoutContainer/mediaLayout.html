@@ -29,23 +29,43 @@
 		<script src="animate.js" type="text/javascript" charset="utf-8"></script>
 		<script src="layoutContainer.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
+			var layoutProps = {
+				animate: true,
+				duration: 200,
+				ratio: 3/4,
+				bigRatio: 9/16,
+				ignoreClasses: ["ignore"],
+				bigClass: "big",
+				complete: function() {
+					$("#layoutContainer > div:not(.ignore)").each(function(index) {
+						console.log($(this).width() + " " + $(this).height());
+					});
+				}
+			};
+			
 			$(document).ready(function() {
-				$("#layoutContainer").layout({
-					animate: true,
-					duration: 2000,
-					ratio: 9/16,
-					ignoreClasses: ["ignore"],
-					complete: function() {
-						$("#layoutContainer > div:not(.ignore)").each(function(index) {
-							console.log($(this).width() + " " + $(this).height());
-						});
+				$("#layoutContainer").layout(layoutProps);
+				
+				$("#layoutContainer > div:not(.ignore)").dblclick(function(event) {
+					if ($(this).hasClass("big")) {
+						$(this).removeClass("big");
+					} else {
+						$(this).siblings().removeClass("big");
+						$(this).addClass("big");
 					}
+					$(this).parent().layout(layoutProps);
 				});
 			});
+			
+			function updateSize() {
+				$("#layoutContainer").width(document.getElementById('width').value).height(document.getElementById('height').value).layout(layoutProps);
+			}
+			
 			
 		</script>
 	</head>
 	<body>
+		<div>Double click to make an element big</div>
 		<div id="layoutContainer">
 			<div class="red">
 				<span>Red</span>
@@ -59,6 +79,12 @@
 			<div class="ignore">
 				<span>Ignore Me</span>
 			</div>
+		</div>
+		
+		<div>
+			<label for="width">Width:</label><input type="text" name="width" value="500" id="width">
+			<label for="height">Height:</label><input type="text" name="height" value="300" id="height">
+			<input type="button" name="set" value="Set" id="set" onclick="updateSize();">
 		</div>
 	</body>
 </html>
