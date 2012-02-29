@@ -38,37 +38,69 @@
 			return callback;
 		};
 		
+		var positionElement = function(elem, x, y, width, height, duration) {			
+			var $elem = $(elem);
+			
+			var positionSWF = function() {
+				// Set the height and width of the flash object (stream) that sits in the container
+				var obj = $elem.find("object") ? $elem.find("object") : $elem.find("embed");
+				if (obj && obj.length > 0) {
+					obj[0].width = width;
+					obj[0].height = height;
+				}	
+			};
+			
+			// Set position and size of the stream container
+			if (animate && $elem.moveSWF) {
+				$elem.moveSWF(x, y, duration, addCallback());
+				if ($elem.width() < width && $elem.height() < height) {
+					// Resize the swf first if it needs to be bigger and then animate
+					positionSWF();
+					$elem.resizeSWF(width, height, duration, addCallback());
+				} else {
+					// If it needs to be smaller than resize it after the animation is complete
+					$elem.resizeSWF(width, height, duration, function() {
+						positionSWF();
+						addCallback()();
+					});
+				}
+			} else {
+				var targetPosition = {
+					left: x + "px",
+					top: y + "px",
+					width: width + "px",
+					height: height + "px"
+				};
+				
+				$elem.css(targetPosition);
+				positionSWF();
+			}
+		};
+		
 		var bigElem = this.find(">.big");
 		var offsetLeft = 0;
 		var offsetTop = 0;
 		if (bigElem.length > 0) {
+			firstBigElem = $(bigElem[0]);
 			var availRatio = this.height() / this.width();
 			// We have a big element to deal with
 			var bigWidth;
 			var bigHeight;
 			if (availRatio > bigRatio) {
-				// Size the big element to be the whole width and figure out the height based on ratio
-				bigWidth = this.width();
-				bigHeight = offsetTop = Math.floor(bigWidth * bigRatio);
-			} else if (availRatio < bigRatio) {
-				// Size the big element to be the whole height
-				bigHeight = this.height();
-				bigWidth = offsetLeft = Math.floor(bigHeight / bigRatio);
+				// Size the big element to be the whole width up to 90% and figure out the height based on ratio
+				bigWidth = Math.min(this.width(), Math.floor(this.width() * 0.9));
+				bigHeight = Math.floor(bigWidth * bigRatio);
+				offsetTop = bigHeight + parseInt(firstBigElem.css("paddingTop"), 10) + parseInt(firstBigElem.css("paddingBottom"), 10) +
+                                    parseInt(firstBigElem.css("marginTop"), 10) + parseInt(firstBigElem.css("marginBottom"), 10);
 			} else {
-				// They are equal so we need to leave some space for the other elements
-				bigHeight = Math.floor(this.height() * 0.75);	// 75% of the height
-				bigWidth = offsetLeft = Math.floor(bigHeight / bigRatio);
+				// Size the big element to be the whole height up to 90% of the height
+				bigHeight = Math.min(this.height(), Math.floor(this.height() * 0.9));
+				bigWidth = Math.floor(bigHeight / bigRatio);
+				offsetLeft = bigWidth + parseInt(firstBigElem.css("paddingLeft"), 10) + parseInt(firstBigElem.css("paddingRight"), 10) + 
+                                    parseInt(firstBigElem.css("marginLeft"), 10) + parseInt(firstBigElem.css("marginRight"), 10);
 			}
 			
-			if (animate && bigElem.moveSWF) {
-				bigElem.moveSWF(0, 0, duration, addCallback());
-				bigElem.resizeSWF(bigWidth, bigHeight, duration, addCallback());
-			} else {
-				bigElem.height(bigHeight).width(bigWidth).css({
-					top: "0px",
-					left: "0px"
-				});
-			}
+			positionElement(firstBigElem, 0, 0, bigWidth, bigHeight, duration);			
 		}
         
 		this.each(function() {
@@ -88,7 +120,7 @@
 			var targetCols;
 			var targetRows;
 			var availableRatio = Height / Width;
-			for (var i=1; i <= count; i++) {
+			for (i=1; i <= count; i++) {
 				var cols = i;
 				var rows = Math.ceil(count / cols);
 				var ratio = rows/cols * vid_ratio;
@@ -137,27 +169,7 @@
                 var actualHeight = targetHeight - parseInt($(elem).css("paddingTop"), 10) - parseInt($(elem).css("paddingBottom"), 10) -
                                     parseInt($(elem).css("marginTop"), 10) - parseInt($(elem).css("marginBottom"), 10);
 
-				// Set position and size of the stream container
-				if (animate && $(elem).moveSWF) {
-					$(elem).moveSWF(x + offsetLeft, y + offsetTop, duration, addCallback());
-					$(elem).resizeSWF(actualWidth, actualHeight, duration, addCallback());
-				} else {
-					var targetPosition = {
-						left: (x + offsetLeft) + "px",
-						top: (y + offsetTop) + "px",
-						width: actualWidth + "px",
-						height: actualHeight + "px"
-					};
-					
-					$(elem).css(targetPosition);
-				}
-
-				// Set the height and width of the flash object (stream) that sits in the container
-				var obj = $(elem).find("object") ? $(elem).find("object") : $(elem).find("embed");
-				if (obj && obj.length > 0) {
-					obj[0].width = actualWidth;
-					obj[0].height = actualHeight;
-				}
+				positionElement(elem, x+offsetLeft, y+offsetTop, actualWidth, actualHeight, duration);
 			});
 		});
 		
@@ -182,7 +194,7 @@
 			var div = document.createElement("div");
 			div.setAttribute('id', divId);
 			container.appendChild(div);
-			$(container).addClass("swfContainer");
+			$(container).addClass("swfContainer").css("overflow", "hidden");
 
 			this.appendChild(container);
 		});
