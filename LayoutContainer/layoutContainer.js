@@ -15,6 +15,7 @@
 		var duration = params.duration || 200;
 		var bigClass = params.bigClass || "big";
 		var bigRatio = params.bigRatio || 3/4;
+		var positionedClass = "TB_layout_positioned";
 		
 		// Register callbacks for every animation callback and when they all fire we call
 		// the params.complete method
@@ -51,7 +52,7 @@
 			};
 			
 			// Set position and size of the stream container
-			if (animate && $elem.moveSWF) {
+			if (animate && $elem.hasClass(positionedClass) && $elem.moveSWF) {
 				$elem.moveSWF(x, y, duration, addCallback());
 				if ($elem.width() < width && $elem.height() < height) {
 					// Resize the swf first if it needs to be bigger and then animate
@@ -74,6 +75,10 @@
 				
 				$elem.css(targetPosition);
 				positionSWF();
+				// Fade us in if this element has never been positioned before
+				if (!$elem.hasClass(positionedClass)) {
+					$elem.css("opacity", 0.1).animate({opacity: 1}, duration).addClass(positionedClass);
+				}
 			}
 		};
 		

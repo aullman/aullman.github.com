@@ -68,14 +68,16 @@
 					var subscriber = subscribers.pop();
 					var parent = document.getElementById(subscriber.id).parentNode;
 					session.unsubscribe(subscriber);
-				 	parent.parentNode.removeChild(parent);
+					$(parent).fadeOut(500, function() {
+					 	parent.parentNode.removeChild(parent);
+					}).addClass("ignore");
 					layout(true);			// Tell the layout container to lay itself out and animate
 				}
 			}
 			
 			function layout(animate) {
 				var ratio = $("#layout > .swfContainer").length >= 4 ? 4/3 : 3/4;
-				$("#layout").layout({animate:animate, ratio:ratio, bigRatio: 9/16});
+				$("#layout").layout({animate:animate, ratio:ratio, bigRatio: 9/16, duration: 500, ignoreClasses: ["ignore"]});
 			}
 			
 			
