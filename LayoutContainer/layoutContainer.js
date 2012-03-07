@@ -1,5 +1,33 @@
 (function($) {
-	
+	var defaultAnimate = false,
+		defaultVidRatio = 3/4,
+		defaultIgnoreClasses = [],
+		defaultDuration = 200,
+		defaultBigClass = "big",
+		defaultBigRatio = 3/4;
+
+	// Return the layout container children that would be laid out
+	// when calling the layout function.
+	//
+	// If you call the layout function with a custom bigClass or ignoreClasses,
+	// then you'll need to pass them into layoutChildren as part of the +params+
+	// options hash.
+	//
+	// Note: This won't work on a collection, only on a single result
+	$.fn.layoutChildren = function(params) {
+		if (!params) params = {};
+
+		var ignoreClasses = params.ignoreClasses || defaultIgnoreClasses,
+			bigClass = params.bigClass || defaultBigClass,
+			childSelector = ">*:not(." + bigClass + ")";
+
+		for (var i=0, numIgnoreClasses = ignoreClasses.length; i < numIgnoreClasses; i++) {
+			childSelector += ":not(." + ignoreClasses[i] + ")";
+		};
+
+		return $(this[0]).find(childSelector);
+	};
+
 	/*
 	 *	layout - Lays out and resizes the contents of the specified container in the optimal arrangement
 	 *	and size so that they fill the space. This is intended for use with the OpenTok library to layout 
@@ -8,13 +36,14 @@
 	 *	animate - Boolean value whether to animate the transition to the new layout.
 	 */
 	$.fn.layout = function(params) {
-		var animate = params.animate || false;
+		if (!params) params = {};
+		var animate = params.animate || defaultAnimate;
 		// Aspect ratio of the streams
-		var vid_ratio = params.ratio || 3/4;
-		var ignoreClasses = params.ignoreClasses || [];
-		var duration = params.duration || 200;
-		var bigClass = params.bigClass || "big";
-		var bigRatio = params.bigRatio || 3/4;
+		var vid_ratio = params.ratio || defaultVidRatio;
+		var ignoreClasses = params.ignoreClasses || defaultIgnoreClasses;
+		var duration = params.duration || defaultDuration;
+		var bigClass = params.bigClass || defaultBigClass;
+		var bigRatio = params.bigRatio || defaultBigRatio;
 		var positionedClass = "TB_layout_positioned";
 		
 		// Register callbacks for every animation callback and when they all fire we call
@@ -82,7 +111,7 @@
 			}
 		};
 		
-		var bigElem = this.find(">.big");
+		var bigElem = this.find(">." + bigClass);
 		var offsetLeft = 0;
 		var offsetTop = 0;
 		if (bigElem.length > 0) {
@@ -115,21 +144,22 @@
 			var Height = $(subscriberBox).height() - offsetTop;
 			$(subscriberBox).css("position", "relative");
 
-			// Finds the ideal number of columns and rows to minimize the amount of wasted space
-			var childSelector = ">*:not(." + bigClass + ")";
-			for (var i=0; i < ignoreClasses.length; i++) {
-				childSelector += ":not(." + ignoreClasses[i] + ")";
-			};
-			var count = $(this).find(childSelector).length;
+			var layoutChildren = $(this).layoutChildren({
+				ignoreClasses: ignoreClasses, 
+				bigClass: bigClass
+			});
+
+			var count = layoutChildren.length;
 			var min_diff;
 			var targetCols;
 			var targetRows;
 			var availableRatio = Height / Width;
+
 			for (i=1; i <= count; i++) {
 				var cols = i;
 				var rows = Math.ceil(count / cols);
 				var ratio = rows/cols * vid_ratio;
-				var ratio_diff = Math.abs( availableRatio - ratio);
+				var ratio_diff = Math.abs(availableRatio - ratio);
 				if (!min_diff || (ratio_diff < min_diff)) {
 					min_diff = ratio_diff;
 					targetCols = cols;
@@ -158,7 +188,7 @@
 			// Loop through each stream in the container and place it inside
 			var x = 0;
 			var y = 0;
-			$(this).find(childSelector).each(function(i, elem) {
+			layoutChildren.each(function(i, elem) {
 				if (i % targetCols == 0) {
 					// We are the first element of the row
 					x = firstColMarginLeft;

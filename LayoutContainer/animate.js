@@ -1,5 +1,8 @@
 (function($) {
 	
+	var resizers = [];
+	var movers = [];
+	
 	/*
 	 *	A custom animation plugin that works with SWFs. Default jQuery animate functions
 	 *	don't behave nicely in some browsers. In Firefox it causes the SWF to reload every
@@ -54,6 +57,13 @@
 	function Resizer (that, targetValue, duration, isWidth, callback) {
 		this.parentClass = NumericAnimator;
 		this.parentClass(that, isWidth ? $(that).width() : $(that).height(), targetValue, duration, callback);
+		this.resizeElement = that;
+		
+		for (var i=0; i < resizers.length; i++) {
+			if (that === resizers[i].resizeElement)
+				resizers[i].stop();
+		};		
+		resizers.push(this);
 
 		var superSetCurrentValue = this.setCurrentValue;
 		this.setCurrentValue = function(value) {
@@ -69,6 +79,13 @@
 	function Mover (that, targetValue, duration, cssKey, callback) {
 		this.parentClass = NumericAnimator;
 		this.parentClass(that, $(that).position()[cssKey], targetValue, duration, callback);
+		this.moveElement = that;
+		
+		for (var i=0; i < movers.length; i++) {
+			if (that === movers[i].moveElement)
+				movers[i].stop();
+		};		
+		movers.push(this);
 
 		var superSetCurrentValue = this.setCurrentValue;
 		this.setCurrentValue = function(value) {
