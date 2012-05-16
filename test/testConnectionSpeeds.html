@@ -1,0 +1,72 @@
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<title>testConnectionSpeeds</title>
+		<script src="http://static.opentok.com/v0.91/js/TB.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			(function(TB) {
+				var start, sessionId, apiKey, token, properties;
+
+				var oldInit = TB.initSession;
+				TB.initSession = function(p_sessionId) {
+					sessionId = p_sessionId;
+					var session = oldInit.apply(this, arguments);
+					var oldConnect = session.connect;
+					session.connect = function(p_apiKey, p_token, p_properties) {
+						apiKey = p_apiKey;
+						token = p_token;
+						start = new Date();
+						properties = p_properties;
+						oldConnect.apply(session, arguments);
+					};
+					return session;
+				};
+
+				var oldSC = TB.sessionConnectedHandler;
+				TB.sessionConnectedHandler = function() {
+					var end = new Date();
+					console.log("*************");
+					console.log("sessionId: " + sessionId);
+					console.log("apiKey: " + apiKey);
+					console.log("token: " + token);
+					console.log("properties: " + properties);
+					console.log("***Session Connect took " + ((end-start)/1000) + " seconds");
+					console.log("*************");
+
+					return oldSC.apply(this, arguments);
+				};
+			})(TB);
+		
+			//TB.setLogLevel(TB.DEBUG);
+			var BuildProps = {
+				apiKey: "214601",
+				token: "T1==cGFydG5lcl9pZD0yMTQ2MDEmc2RrX3ZlcnNpb249dGJweS12MC45MS4yMDExLTA3LTA1JnNpZz05NmI3NjVlYWFhN2E4ZmE3OWJjZmUzODUwNzNiZmE3M2VlNGFiMzlhOmNvbm5lY3Rpb25fZGF0YT0lN0IlMjJwYXJ0aWNpcGFudF9pZCUyMiUzQSszMTE5OCU3RCZub25jZT02Mjk5NzkmY3JlYXRlX3RpbWU9MTMzNzEzMjA4NiZyb2xlPXB1Ymxpc2hlciZzZXNzaW9uX2lkPTFfTVg0eU1UUTJNREYtTWpBeUxqRTNNUzR4T0RBdU1UWXlmakl3TVRJdE1EVXRNVFlnTURFNk16UTZORFl1TWpZNE1UY3hLekF3T2pBd2ZqQXVPVFkwTmpnNU5UZ3pNakYt",
+				sessionID: "1_MX4yMTQ2MDF-MjAyLjE3MS4xODAuMTYyfjIwMTItMDUtMTYgMDE6MzQ6NDYuMjY4MTcxKzAwOjAwfjAuOTY0Njg5NTgzMjF-"
+			};
+		
+			var start = new Date();
+			var connected;
+			var publishing;
+			
+			var session = TB.initSession(BuildProps.sessionID);
+			session.addEventListener("sessionConnected", function(event) {
+				connected = new Date();
+				
+				session.publish();
+			});
+			session.addEventListener("streamCreated", function(event) {
+				if (event.streams[0].connection.connectionId == session.connection.connectionId) publishing = new Date();
+				calculateTimes();
+			});
+			
+			function calculateTimes() {
+				console.log("Time to connect " + ((connected - start)/1000) + " seconds");
+				console.log("Time to publish " + ((publishing - connected)/1000) + " seconds");
+				//console.log("Time to subscribe " + ((subscribing - publishing)/1000) + " seconds");
+			}
+			
+			session.connect(BuildProps.apiKey, BuildProps.token);
+			
+		</script>
+	</head>
+</html>
