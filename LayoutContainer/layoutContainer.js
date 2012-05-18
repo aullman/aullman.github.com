@@ -83,12 +83,14 @@
 			// Set position and size of the stream container
 			if (animate && $elem.hasClass(positionedClass) && $elem.moveSWF) {
 				$elem.moveSWF(x, y, duration, addCallback());
-				if ($elem.width() < width && $elem.height() < height) {
-					// Resize the swf first if it needs to be bigger and then animate
+				if ($elem.width() > width && $elem.height() > height) {
+					// If it needs to be smaller then resize the SWF first so that 
+					// it doesn't disappear (in Firefox)
 					positionSWF();
 					$elem.resizeSWF(width, height, duration, addCallback());
 				} else {
-					// If it needs to be smaller than resize it after the animation is complete
+					// Resize the swf after it animates if it needs to be bigger so that it doesn't
+					// disappear (in Firefox)
 					$elem.resizeSWF(width, height, duration, function() {
 						positionSWF();
 						addCallback()();
