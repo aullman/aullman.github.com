@@ -3,9 +3,6 @@ package
 	import flash.display.Sprite;
 	import flash.media.Video;
 	import flash.media.Camera;
-	import flash.text.TextField;
-	import flash.text.TextFormat;
-	import flash.text.TextFieldAutoSize;
 	import flash.net.NetConnection;
 	import flash.net.NetStream;
 	import flash.media.Microphone;
