@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<project name="CallWidget Redirect"
+	default="install"
+	basedir=".">
+	
+	<property name="build.dir" value="./build"/>
+	<property name="web.dir" value="./html"/>
+	
+	<target name="install">
+		<taskdef resource="flexTasks.tasks">
+			<classpath>
+				<pathelement location="${build.dir}/lib/flex/flexTasks.jar"/>
+			</classpath>
+		</taskdef>
+
+		<property name="FLEX_HOME" value="${build.dir}/lib/flex"/>
+		
+		<mxmlc file="src/PepperAudioCrash.as"
+			   output="${web.dir}/PepperAudioCrash.swf"
+			   as3="true"
+			   headless-server="true"
+			   debug="false"
+			   optimize="true"
+			   locale="en_US"
+			   >
+		</mxmlc>
+	</target>
+	
+</project>
