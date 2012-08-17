@@ -3,21 +3,31 @@
 <project name="CallWidget Redirect"
 	default="install"
 	basedir=".">
-	
 	<property name="build.dir" value="./build"/>
-	<property name="web.dir" value="./html"/>
+	<property name="web.dir" value="./html"/>	
 	
-	<target name="install">
+	<target name="setup">
+
+		
 		<taskdef resource="flexTasks.tasks">
 			<classpath>
 				<pathelement location="${build.dir}/lib/flex/flexTasks.jar"/>
 			</classpath>
 		</taskdef>
-
+		
 		<property name="FLEX_HOME" value="${build.dir}/lib/flex"/>
+
+        <tstamp>
+          <format property="current.time" pattern="yyyyMMddkkmm"/>
+        </tstamp>
+        <property name="build.num" value="${current.time}"/>		
+	</target>
+	
+	<target name="install" depends="setup">		
+		<property name="swf.name" value="PepperAudioCrash-${build.num}.swf"/>
 		
 		<mxmlc file="src/PepperAudioCrash.as"
-			   output="${web.dir}/PepperAudioCrash.swf"
+			   output="${web.dir}/${swf.name}"
 			   as3="true"
 			   headless-server="true"
 			   debug="false"
@@ -25,6 +35,19 @@
 			   locale="en_US"
 			   >
 		</mxmlc>
+		
+		<copy file="${build.dir}/index.template.html" tofile="${web.dir}/index.html" filtering="true" overwrite="true">
+          <filterset>
+            <filter token="swf.name" value="${swf.name}"/>
+          </filterset>
+		</copy>
+	</target>
+	
+	<target name="clean">
+		<delete>
+	      <fileset dir="${web.dir}" includes="index.html"/>
+	      <fileset dir="${web.dir}" includes="PepperAudioCrash-*.swf"/>
+	    </delete>
 	</target>
 	
 </project>
