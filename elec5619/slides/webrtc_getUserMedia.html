@@ -1,0 +1,92 @@
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<title>WebRTC - getUserMedia</title>
+		<link rel="stylesheet" href="css/slide.css" type="text/css" media="screen" title="no title" charset="utf-8">
+		
+		<style type="text/css" media="screen">
+			video {
+				width: 320px;
+				height: 240px;
+				background-color: black;
+			}
+			.videoEl {
+				float: right;
+			}
+			.videoEl > input {
+				margin-left: auto;
+				margin-right: auto;
+				display: block;
+			}
+			pre {
+				width: 720px;
+			}
+		</style>
+		<script type="text/javascript" charset="utf-8">
+		
+		var stream;
+		
+		function startVideo() {
+			if (!navigator.getUserMedia) {
+			    navigator.getUserMedia = navigator.webkitGetUserMedia ||
+									navigator.mozGetUserMedia ||
+									navigator.msGetUserMedia;
+			}
+			if (!window.URL) {
+			    window.URL = window.webkitURL;
+			}
+			var videoEl = document.getElementById('me');
+			navigator.getUserMedia({video: true}, function(p_stream) {
+				stream = p_stream;
+			    videoEl.src = window.URL.createObjectURL(stream);
+				document.getElementById('start').value = "Stop";
+			}, function() {
+				alert("Error");
+			});
+		}
+		
+		function stopVideo() {
+			stream.stop();
+			stream = null;
+			var videoEl = document.getElementById('me');
+			videoEl.src = null;
+			document.getElementById('start').value = "Run";
+		}
+		
+		function toggleVideo() {
+			if (stream != null) {
+				stopVideo();
+			} else {
+				startVideo();
+			}
+		}
+		
+		
+		</script>
+	</head>
+	<body>
+		<h1>WebRTC - getUserMedia</h1>
+		
+		<div class="videoEl">
+			<video id="me" autoplay></video>
+			<input type="button" name="start" value="Run" id="start" onclick="toggleVideo()">
+		</div>
+		
+		<pre>
+if (!navigator.getUserMedia) {
+  navigator.getUserMedia = navigator.webkitGetUserMedia ||
+                        navigator.mozGetUserMedia ||
+                        navigator.msGetUserMedia;
+}
+
+if (!window.URL) {
+  window.URL = window.webkitURL;
+}
+
+navigator.getUserMedia({video: true}, function(stream) {
+  var videoEl = document.getElementById('videoEl');
+  videoEl.src = window.URL.createObjectURL(stream);
+});
+		</pre>
+	</body>
+</html>

@@ -1,0 +1,46 @@
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<title>OpenTok - Session basics</title>
+		<link rel="stylesheet" href="css/slide.css" type="text/css" media="screen" title="no title" charset="utf-8">
+		<style type="text/css" media="screen">
+			body {
+				padding-top: 10px;
+			}
+		</style>
+	</head>
+	<h3>OpenTok - Session basics</h3>
+	
+	<ul>
+		<li>Session</li>
+		<ul>
+			<li>properties</li>
+			<ul>
+				<li><code>sessionId</code> - unique id for this session, like a room id.</li>
+				<li><code>connection</code> - describes your connection to the session</li>
+			</ul>
+		</ul>
+		<ul>
+			<li>methods</li>
+			<ul>
+				<li><code>connect(apiKey, token)</code> - Connect to the session</li>
+				<li><code>disconnect()</code> - Disconnect from the session</li>
+				<li><code>publish():Publisher</code> - Publish your video to the Session</li>
+				<li><code>unpublish(publisher)</code> - Stop publishing your stream.</li>
+				<li><code>subscribe(stream):Subscriber</code> - Subscribe to someone's stream</li>
+				<li><code>unsubscribe(subscriber)</code> - Unsubscribe from someone's stream</li>
+			</ul>
+		</ul>
+		<ul>
+			<li>events</li>
+			<ul>
+				<li><code>sessionConnected</code> - You successfully connected to the session.</li>
+				<li><code>sessionDisconnected</code> - You have disconnected from the session.</li>
+				<li><code>streamCreated</code> - Someone started publishing a new stream in the session.</li>
+				<li><code>streamDestroyed</code> - Someone stopped publishing.</li>
+				<li><code>connectionCreated</code> - Someone connected to the session.</li>
+				<li><code>connectionDestroyed</code> - Someone disconnected from the session.</li>
+			</ul>
+		</ul>
+	</ul>
+</html>

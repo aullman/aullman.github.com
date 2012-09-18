@@ -1,0 +1,95 @@
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<title>WebRTC - PeerConnection</title>
+		<link rel="stylesheet" href="css/slide.css" type="text/css" media="screen" title="no title" charset="utf-8">
+		<style type="text/css" media="screen">
+			video {
+				width: 320px;
+				height: 240px;
+				background-color: #000;
+			}
+		</style>
+		<script type="text/javascript" charset="utf-8">
+			var localStream;
+			var peerConnections = {
+				local: null,
+				remote: null
+			};
+			
+			function run() {
+				startPublishing();
+			}
+			
+			function startPublishing() {
+				if (!navigator.getUserMedia) {
+				    navigator.getUserMedia = navigator.webkitGetUserMedia ||
+										navigator.mozGetUserMedia ||
+										navigator.msGetUserMedia;
+				}
+				if (!window.URL) {
+				    window.URL = window.webkitURL;
+				}
+				var videoEl = document.getElementById('publisher');
+				navigator.getUserMedia({video: true}, function(p_stream) {
+					localStream = p_stream;
+				    videoEl.src = window.URL.createObjectURL(localStream);
+				
+					peerConnections.local = createPeerConnection(localStream, function(candidate, moreToFollow) {
+						if (candidate) {
+							sendIceCandidate("remote", candidate);
+						}
+					});
+					
+					peerConnections.local.addStream(localStream);
+				}, function() {
+					alert("Error");
+				});
+			}
+			
+			function createPeerConnection(stream, onIceCandidate) {
+				var pc = new webkitPeerConnection00("STUN stun.l.google.com:19302", onIceCandidate);
+			}
+			
+			function sendIceCandidate(to, candidate) {
+				var label = candidate.label;
+				var sdp = candidate.toSdp();
+				switch(label) {
+					case "offer":
+					
+						break;
+		            case "answer":
+		                peerConnections[to].setRemoteDescription(
+		                    peerConnections[to].SDP_ANSWER,
+		                    new SessionDescription(sdp)
+		                );
+
+		                peerConnections[to].startIce();
+
+			            peerConnections[to].processIceMessage(
+			                new IceCandidate(label, sdp)
+			            );
+
+		                break;
+
+
+		            case "candidate":
+		                _iceProcessor.process(message);
+		                break;
+
+		            default:
+		                OT.debug("PublisherPeerConnection.processMessage: Received an unexpected message of type " + type + " from " + _subscriberConnection.id + ": " + JSON.stringify(message));
+		        }
+			}
+			
+			
+		</script>
+	</head>
+	<body>
+		<h1>WebRTC - PeerConnection</h1>
+		
+		<input type="button" name="run" value="Run" id="run" onclick="run()"><br>
+		<video id="publisher" autoPlay></video>
+		<video id="subscriber" autoPlay></video>
+	</body>
+</html>
