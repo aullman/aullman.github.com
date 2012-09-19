@@ -2,11 +2,18 @@ body {
 	color: #666;
 	font-size: 35px;
 	padding: 40px;
-	background: url('../img/tokbox-logo.png') no-repeat 97% 97%;
-	
+	background: url('../img/tokbox-logo.png') no-repeat 97% 97%;	
 }
 body>ul {
 	margin-left: 80px;
+}
+
+a {
+	color: #0D80CC;
+}
+
+a:visited {
+	color: #0D80CC;
 }
 
 pre {
