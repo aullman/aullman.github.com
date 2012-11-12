@@ -157,7 +157,7 @@
 			var targetRows;
 			var availableRatio = Height / Width;
 
-			for (i=1; i <= count; i++) {
+			for (var i=1; i <= count; i++) {
 				var cols = i;
 				var rows = Math.ceil(count / cols);
 				var ratio = rows/cols * vid_ratio;
