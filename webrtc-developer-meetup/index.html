@@ -1,0 +1,26 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html ng-app="slideviewer">
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <title>WebRTC Developer Meetup - How Opentok Makes Webrtc More Awesome</title>
+        <script src="http://code.jquery.com/jquery-1.6.2.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src='https://cdn.firebase.com/v0/firebase.js'></script>
+        <script src="http://static.opentok.com/webrtc/v2.0/js/TB.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/lib/angular/angular.js"></script>
+        <script src="js/lib/TB_Angular.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/app.js"></script>
+        <script src="js/controllers.js"></script>
+        <link rel="stylesheet" href="css/slides.css" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="css/textmate.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    </head>
+    <body ng-controller="SlidesCtrl">
+        <div ng-view></div>
+        
+        <div class="footer"><img class="logo" src="img/footer_logo.png" width="95" height="25" alt="Footer Logo"></div>
+        <div class="subscribers slide-num-{{slideNum}}" ng-controller="OpenTokCtrl">
+            <publisher apiKey="1127" publisher="publisher"></publisher>
+            <subscriber ng-repeat="stream in streams | filter:notMine" stream="stream" session="session">
+        </div>
+    </body>
+</html>

@@ -1,0 +1,132 @@
+body {
+  margin: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 18px;
+  line-height: 18px;
+  color: #333333;
+  background-color: #ffffff;
+}
+
+div.slide > h1 {
+    margin: 0;
+    font-size: 40px;
+    font-variant: small-caps;
+    line-height: 42px;
+    background-color: rgba(31,26,23,0.9);
+    padding: 15px;
+    padding-left: 55px;
+    color: #fcf5e2;
+    
+}
+
+div.footer {
+    background-color: rgba(31,26,23,0.9);
+    color: #fcf5e2;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    padding: 15px;
+}
+
+div.slide > div.content {
+    margin: 50px;
+    margin-left: 75px;
+}
+
+/*div.slide > * {
+    margin-left: 25px !important;
+}*/
+
+div.content > ul > li {
+    font-size: 25px;
+    padding: 10px;
+    line-height: 27px;
+}
+
+div.content > ul > li > ul > li {
+    font-size: 18px;
+}
+
+div.content > pre {
+    font-size: 15px;
+}
+
+div.imgCanvas {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #999;
+    float: right;
+}
+
+li.oneOnOne {
+/*    background: url('../img/onetoone.png') no-repeat;*/
+}
+
+li.groupChat {
+/*    background: url('../img/group.png') no-repeat;*/
+}
+
+li.premiumSupport {
+/*    background: url('../img/email.png') no-repeat;*/
+}
+
+publisher {
+    width: 80px !important;
+    height: 60px !important;
+    position:fixed !important;
+    bottom: 10px;
+    right: 10px;
+    background-color: black;
+}
+
+subscriber {
+    display:block;
+    width: 264px !important;
+    height: 198px !important;
+    background-color: black;
+    -webkit-transition-property: width,height;
+    -webkit-transition-duration: 0.5s;
+    -webkit-transition-timing-function: ease-out;
+    -moz-transition-property: width,height;
+    -moz-transition-duration: 0.5s;
+    transition-property: width,height;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-out;
+}
+
+div.subscribers {
+    position:fixed;
+    right: 0px;
+    top: 80px;
+    padding-right: 20px;
+    
+/*    -ms-transition-property: width;
+    -ms-transition-duration: 0.5s;
+    -moz-transition-property: opacity;
+    -moz-transition-duration: 0.5s;*/
+
+/*    -o-transition-property: opacity;
+    -o-transition-duration: 0.5s;
+    transition-property: opacity;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-in;
+*/    
+}
+
+div.subscribers.slide-num-5 subscriber,
+    div.subscribers.slide-num-6 subscriber,
+    div.subscribers.slide-num-7 subscriber {
+    width: 75px !important;
+    height: 75px !important;
+}
+
+div.subscribers.slide-num-13 {
+    position: static;
+    width: 100%;
+}
+
+div.subscribers.slide-num-13 subscriber {
+    width: 640px !important;
+    height: 480px !important;
+    margin: 0 auto;
+}
