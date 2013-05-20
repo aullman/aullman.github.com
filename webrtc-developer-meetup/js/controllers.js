@@ -1,5 +1,5 @@
-function SlideCtrl($scope, $routeParams) {
-    //$scope.slideNum = parseInt($routeParams.slideNum, 10);
+function SlideCtrl($scope) {
+    // Do nothing for now
 }
 
 var OpenTokCtrl = TB.angular.createOpentokCtrl(1127, 
@@ -19,7 +19,8 @@ function SlidesCtrl($scope, $routeParams, $location, $window) {
     var slidesRef = new Firebase('https://webrtc-meetup.firebaseIO.com/slideNum');
     
     var getSlideNum = function() {
-        return parseInt($location.$$path.match("\/slide\/(.+)")[1], 10);
+        if ($location.$$path) return parseInt($location.$$path.match("\/slide\/(.+)")[1], 10);
+        return 1;
     };
     
     var setSlideNum = function(slideNum, push) {
