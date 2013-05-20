@@ -117,10 +117,19 @@ div.subscribers {
 }
 
 div.subscribers.slide-num-5 subscriber,
-    div.subscribers.slide-num-6 subscriber,
-    div.subscribers.slide-num-7 subscriber {
+    div.subscribers.slide-num-6 subscriber {
     width: 75px !important;
     height: 75px !important;
+}
+
+div.subscribers.slide-num-7 {
+    top: 212px;
+    right: 58px;
+}
+
+div.subscribers.slide-num-7 subscriber {
+    width: 230px !important;
+    height: 282px !important;
 }
 
 div.subscribers.slide-num-13 {
