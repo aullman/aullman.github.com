@@ -7,6 +7,10 @@ body {
   background-color: #ffffff;
 }
 
+div.slide {
+    float:left;
+}
+
 div.slide > h1 {
     margin: 0;
     font-size: 40px;
@@ -16,7 +20,18 @@ div.slide > h1 {
     padding: 15px;
     padding-left: 55px;
     color: #fcf5e2;
-    
+}
+
+div.slideScroller {
+    position: absolute;
+    -webkit-transition-property: left;
+    -webkit-transition-duration: 0.5s;
+    -webkit-transition-timing-function: ease-out;
+    -moz-transition-property: left;
+    -moz-transition-duration: 0.5s;
+    transition-property: left;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-out;
 }
 
 div.footer {
@@ -99,18 +114,6 @@ div.subscribers {
     right: 0px;
     top: 80px;
     padding-right: 20px;
-    
-/*    -ms-transition-property: width;
-    -ms-transition-duration: 0.5s;
-    -moz-transition-property: opacity;
-    -moz-transition-duration: 0.5s;*/
-
-/*    -o-transition-property: opacity;
-    -o-transition-duration: 0.5s;
-    transition-property: opacity;
-    transition-duration: 0.5s;
-    transition-timing-function: ease-in;
-*/    
 }
 
 div.subscribers.slide-num-5 subscriber,
@@ -123,6 +126,7 @@ div.subscribers.slide-num-5 subscriber,
 div.subscribers.slide-num-13 {
     position: static;
     width: 100%;
+    padding-top: 80px;
 }
 
 div.subscribers.slide-num-13 subscriber {
