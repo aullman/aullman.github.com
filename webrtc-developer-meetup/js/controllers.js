@@ -8,7 +8,7 @@ var OpenTokCtrl = TB.angular.createOpentokCtrl(1127,
 
 function SlidesCtrl($scope, $routeParams, $location, $window) {
     $scope.slides = OT._.map([1,2,3,4,5,6,7,8,9,10,11,12,13], function(num) {
-        return "slides/" + num + ".html";
+        return "slide/" + num + ".html";
     });
     
     $($window).on("resize", function() {
