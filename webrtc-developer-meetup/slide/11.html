@@ -1,7 +1,12 @@
 <h1>Telephony Demo</h1>
 
 <div style="margin-left: 20px">
-    <iframe src="http://tnw.herokuapp.com/r/Google%20IO" style="border:none;width:640px;height:480px;margin: 0 auto;" frameborder="0"></iframe>
-
+    <script type="text/javascript" charset="utf-8">
+        function showDemo() {
+            $("#demoDiv").html('<iframe src="http://tnw.herokuapp.com/r/Google%20IO" style="border:none;width:640px;height:480px;margin: 0 auto;" frameborder="0"></iframe>');
+        }
+    </script>
+    <div id="demoDiv"></div>
+    <a href="javascript:showDemo()">Show Demo</a>
     <h2>Call: +1 575 377 8041</h2>
 </div>
