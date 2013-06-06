@@ -42,7 +42,7 @@
     </head>
     <body ng-controller="OpentokCtrl">
         <layout>
-            <subscriber ng-repeat="stream in streams | filter:notMine" stream="stream" session="session" props="{subscribeToAudio:false}">
+            <subscriber ng-repeat="stream in streams | filter:notMine" stream="stream" session="session">
                 
             </subscriber>
         </layout>
