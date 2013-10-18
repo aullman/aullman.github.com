@@ -7,7 +7,7 @@ var OpenTokCtrl = TB.angular.createOpentokCtrl(1127,
             "T1==cGFydG5lcl9pZD0xMTI3JnNka192ZXJzaW9uPXRicHktdjAuOTEuMjAxMS0wNy0wNSZzaWc9OWZlYmIxMGQ2ZTJmODkzNzE4YTIxZDk5ZWYzZGFiNWYzZWVjZjdjNTpleHBpcmVfdGltZT0xMzcxMjA2MDczJm5vbmNlPTc0MTA5MyZjcmVhdGVfdGltZT0xMzY4NTc4MDczJnJvbGU9bW9kZXJhdG9yJnNlc3Npb25faWQ9MV9NWDR4TVRJM2ZuNVVkV1VnVFdGNUlERTBJREUzT2pNME9qTXlJRkJFVkNBeU1ERXpmakF1TlRJNE9EVTFOSDQ=");
 
 function SlidesCtrl($scope, $routeParams, $location, $window) {
-    $scope.slides = OT._.map([1,2,3,4,5,6,7,8,9,10,11,12,13], function(num) {
+    $scope.slides = [1,2,3,4,5,6,7,8,9,10,11,12,13].map(function(num) {
         return "slide/" + num + ".html";
     });
     
