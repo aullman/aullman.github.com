@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>Mantis: Scaling WebRTC to Multiparty</title>
+
+        <link rel="stylesheet" href="css/reveal.min.css">
+        <link rel="stylesheet" href="css/theme/sky.css" id="theme">
+        <!-- For syntax highlighting -->
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+        
+        <style type="text/css" media="screen">
+            body {
+              background: #76D4E4;
+              background: -moz-radial-gradient(center, circle cover, #f7fbfc 0%, #76D4E4 100%);
+              background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #f7fbfc), color-stop(100%, #76D4E4));
+              background: -webkit-radial-gradient(center, circle cover, #f7fbfc 0%, #76D4E4 100%);
+              background: -o-radial-gradient(center, circle cover, #f7fbfc 0%, #76D4E4 100%);
+              background: -ms-radial-gradient(center, circle cover, #f7fbfc 0%, #76D4E4 100%);
+              background: radial-gradient(center, circle cover, #f7fbfc 0%, #76D4E4 100%);
+              background-color: #f7fbfc; 
+            }
+        
+            #logo {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+            }
+        </style>
+
+    </head>
+
+    <body>
+        <img src="img/logo.png"/ id="logo">
+        <div class="reveal">
+
+            <div class="slides">
+                <section data-markdown>
+                    Mantis
+                    =====
+                    Scaling WebRTC to Multiparty
+                    --------
+                    
+                    > Adam Ullman
+                    
+                    > Director API and Front-End Engineering @ [TokBox](tokbox.com)
+                    
+                    > [adam@tokbox.com](mailto:adam@tokbox.com)
+                    
+                    > [@aullman](http://twitter.com/aullman)
+                    
+                    > [github.com/aullman](http://github.com/aullman)
+                    
+                </section>
+                
+                <section data-markdown>
+                    Overview
+                    -----
+                    
+                    * Current : What does Mantis currently solve?
+                    * Using Mantis : How to and Demo
+                    * Challenges : Lowest common denominator problem
+                    * Future : What's coming next in Mantis?
+                </section>
+                <section>
+                    <section data-markdown>
+                        Current : The Problem
+                        -------
+                    
+                        * WebRTC is P2P
+                            * Great for 1 to 1 
+                            * OK for small group using mesh architecture
+                            * Not so great for large multi-party calls
+                            * Does not do broadcast
+                    </section>
+                    <section data-markdown>
+                        P2P Mesh Architecture
+                        -------
+                    
+                        ![P2p Diagram](img/p2p-diagram.png)
+                    </section>                    
+                    <section data-markdown>
+                        The Solution: Mantis
+                        ------
+                    
+                        * Acts as a peer and re-broadcasts your stream to other participants
+                        * Tested with up to 60 concurrent streams per call
+                            * 1 publisher to 60 subscribers
+                            * 2 publishers to 30 subscribers
+                        * More coming
+                    </section>
+                    <section data-markdown>
+                        Bridging with Mantis
+                        --------
+                        
+                        ![Mantis Diagram](img/Mantis-Diagram.png)
+                    </section>
+                    <section data-markdown>
+                        ![OpenTok Sequence Diagram](img/OpenTokSequenceDiagram.png)
+                    </section>
+                    <section data-markdown>
+                        ![OpenTok P2P Sequence Diagram](img/OpenTokP2PSequenceDiagram.png)
+                    </section>
+                    <section data-markdown>
+                        ![OpenTokMantisSequenceDiagram](img/OpenTokMantisSequenceDiagram.png)
+                    </section>
+                </section>
+                
+                <section>
+                    <section data-markdown>
+                        How to use Mantis
+                        -------
+                    
+                        * By default all OpenTok applications are Mantis enabled
+                        * No need to re-write an application to be P2P or client-server
+                        * P2P flag when you create a Session
+                    </section>
+                    
+                    <section data-markdown>
+                        How to write an OpenTok App
+                        -------
+                        
+                        * JavaScript QuickStart Guide - http://tokbox.com/opentok/quick-start/
+                        * [JavaScript HelloWorld](http://tokbox.com/opentok/tutorials/hello-world/js/iframe.html?sessionId=2_MX4xMTI3fn5TdW4gT2N0IDIwIDIwOjMzOjAzIFBEVCAyMDEzfjAuNjkzOTA1MjN-) - http://tokbox.com/opentok/tutorials/hello-world/js
+                        * iOS HelloWorld - http://tokbox.com/opentok/tutorials/hello-world/ios/
+                        * Android support in Labs - http://labs.opentok.com/android
+                    </section>
+                </section>
+                <section>
+                    <section data-markdown>
+                        Challenges : Lowest common denominator problem
+                        ------
+                        
+                        * In a large call someone will have a bad connection
+                        * Drags everyone else down
+                        
+                    </section>
+                    <section data-markdown>
+                        Possible Solutions
+                        -------
+                        
+                        * Simulcast
+                            * Broadcast at multiple bitrates at the same time
+                        * Scalable Encoding
+                            * Temporal Scaling - encode multiple framerates
+                            * Spacial Scaling - encoding multiple resolutions
+                        * Transcoding on the server
+                    </section>
+                    <section data-markdown>
+                        Temporal Scalability
+                        ------
+                        
+                        ![Temporal Scalability](img/temporal-scalability.jpg)
+                        
+                        * Slight increase in bitrate required (25% more)
+                    </section>
+                    
+                    <section data-markdown>
+                        Temporal + Spatial Scalability
+                        --------
+                        
+                        ![Temporal+Spatial Scalability](img/temporal+spatial-scalability.jpg)
+                        
+                        * Significant increase in bitrate required across the board
+                    </section>
+                    
+                    <section data-markdown>
+                        Temporal + Simulcast
+                        -------
+                        
+                        * Multiple streams are transferred to Mantis
+                        * Mantis transmits just the stream that is suited to the subscriber
+                        * Higher bitrate required between Publisher and Mantis
+                        * Slight increase in bitrate required between Mantis and Subscriber just for temporal scalability
+                        
+
+                    </section>
+                    
+                    <section data-markdown>
+                        Current State of Affairs
+                        -------
+                        * Browsers (Firefox and Chrome) don't support Simulcast or Scalable Encoding
+                        * Browsers are planning to add both Temporal Scalability and Simulcast ([IETF Draft](http://tools.ietf.org/html/draft-westerlund-avtcore-multistream-and-simulcast-00))
+                        * Temporal Scalability and Simulcast are available in the WebRTC codebase
+                            * We have turned it on in iOS (works great!)
+                        
+                    </section>
+                    
+                    <section data-markdown>
+                        In the meantime : fallback to audio-only
+                        -------
+                        
+                        * Bad quality peers are forced to audio-only
+                        * Not ideal
+                        * Hard to know when to recover
+                            * We're still experimenting
+                        
+                    </section>
+                </section>
+                
+                <section>
+                    <section data-markdown>
+                        What's coming next in Mantis?
+                        ------
+                        * Archiving
+                        * PSTN phone in and phone out
+                        * Larger scale broadcasts (1000s)
+                    </section>
+                    
+                    <section data-markdown>
+                        Archiving
+                        -----
+                        
+                        * Beta release scheduled for November (shhhh)
+                        * Server-side RESTful API for starting, stopping and retrieving an archive
+                        * Output is a composited mp4 file for playback in a Video Element (h.264, mp3)
+                        * Supports Chrome Screen-Sharing API
+                    </section>
+                    
+                    <section data-markdown>
+                        PSTN phone in and phone out
+                        --------
+                        
+                        * Beta release scheduled for December (shhhh)
+                        * No idea what the API looks like yet
+                    </section>
+                    
+                    <section data-markdown>
+                        Larger Scale Broadcasts
+                        -------
+                        
+                        * We're going to start thinking about this Q1 next year
+                        * We've done it before with our Flash API (TokShow)
+                    </section>
+                </section>
+                
+                <section data-markdown>
+                    References
+                    --------
+                    
+                    * Mantis: Next-generation Cloud Technology for WebRTC - http://www.tokbox.com/blog/mantis-next-generation-cloud-technology-for-webrtc
+                    * SVC Demystified: What is Temporal Scalability? - http://www.lifesize.com/videoconferencingspot.com/?p=1406
+                    * RTP Multiple Stream Sessions and Simulcast (IETF Draft) - http://tools.ietf.org/html/draft-westerlund-avtcore-multistream-and-simulcast-00
+                </section>
+
+            </div>
+
+        </div>
+
+        <script src="../lib/js/head.min.js"></script>
+        <script src="../js/reveal.min.js"></script>
+
+        <script>
+
+        Reveal.initialize({
+            dependencies: [
+                { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+            ]
+        });
+
+        </script>
+
+	</body>
+</html>
