@@ -119,6 +119,23 @@
                         * Android support in Labs - http://labs.opentok.com/android
                     </section>
                     <section data-markdown>
+                        Client-side JavaScript
+                        --------
+                        
+                        ```javascript
+                        var session = TB.initSession(sessionId);
+                        session.on({
+                            sessionConnected: function(event) {
+                                session.publish();
+                            },
+                            streamCreated: function(event) {
+                                session.subscribe(event.stream);
+                            }
+                        });
+                        session.connect(apiKey,token);
+                        ```
+                    </section>
+                    <section data-markdown>
                         ![OpenTok Sequence Diagram](img/OpenTokSequenceDiagram.png)
                     </section>
                     <section data-markdown>
