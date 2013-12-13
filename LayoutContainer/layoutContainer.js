@@ -23,7 +23,7 @@
 
 		for (var i=0, numIgnoreClasses = ignoreClasses.length; i < numIgnoreClasses; i++) {
 			childSelector += ":not(." + ignoreClasses[i] + ")";
-		};
+		}
 
 		return $(this[0]).find(childSelector);
 	};
@@ -57,8 +57,8 @@
 						callbacks.splice(i, 1);
 						break;
 					}
-				};
-				if (callbacks.length == 0 && params.complete && typeof(params.complete) == "function" && !completed) {
+				}
+				if (callbacks.length === 0 && params.complete && typeof(params.complete) === "function" && !completed) {
 					completed = true;
 					params.complete();
 				}
@@ -144,7 +144,9 @@
 			// get the size of the container
 			var Width = $(subscriberBox).width() - offsetLeft;
 			var Height = $(subscriberBox).height() - offsetTop;
-			$(subscriberBox).css("position", "relative");
+			if (["relative", "absolute"].indexOf($(subscriberBox).css("position")) === -1) {
+				$(subscriberBox).css("position", "relative");
+			}
 
 			var layoutChildren = $(this).layoutChildren({
 				ignoreClasses: ignoreClasses, 
@@ -167,7 +169,7 @@
 					targetCols = cols;
 					targetRows = rows;
 				}
-			};
+			}
 
 
 			var videos_ratio = (targetRows/targetCols) * vid_ratio;
@@ -191,11 +193,11 @@
 			var x = 0;
 			var y = 0;
 			layoutChildren.each(function(i, elem) {
-				if (i % targetCols == 0) {
+				if (i % targetCols === 0) {
 					// We are the first element of the row
 					x = firstColMarginLeft;
-					if (i == lastRowIndex) x += lastRowMargin;
-					y += i == 0 ? firstRowMarginTop : targetHeight;
+					if (i === lastRowIndex) x += lastRowMargin;
+					y += i === 0 ? firstRowMarginTop : targetHeight;
 				} else {
 					x += targetWidth;
 				}
@@ -220,7 +222,7 @@
 	
 	/*
 	 *	createElement - creates a new element inside the layout container and returns its div id to
-	 * 		be passed to the publish or subscribe method in the OpenTok API.
+	 *	be passed to the publish or subscribe method in the OpenTok API.
 	 */
 	$.fn.createElement = function() {
 		var divId;
