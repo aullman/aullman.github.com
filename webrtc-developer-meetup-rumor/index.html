@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>Rumors and Raptors: Tales of Signaling at TokBox</title>
+
+        <link rel="stylesheet" href="css/reveal.min.css">
+        <link rel="stylesheet" href="css/theme/sky.css" id="theme">
+        <!-- For syntax highlighting -->
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+        
+        <style type="text/css" media="screen">
+            body {
+              background: #76D4E4;
+              background: -moz-radial-gradient(center, circle cover, #f7fbfc 0%, #76D4E4 100%);
+              background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #f7fbfc), color-stop(100%, #76D4E4));
+              background: -webkit-radial-gradient(center, circle cover, #f7fbfc 0%, #76D4E4 100%);
+              background: -o-radial-gradient(center, circle cover, #f7fbfc 0%, #76D4E4 100%);
+              background: -ms-radial-gradient(center, circle cover, #f7fbfc 0%, #76D4E4 100%);
+              background: radial-gradient(center, circle cover, #f7fbfc 0%, #76D4E4 100%);
+              background-color: #f7fbfc; 
+            }
+            
+            .reveal section img {
+                border: none;
+            }
+        
+            #logo {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+            }
+        </style>
+
+    </head>
+
+    <body>
+        <img src="img/logo.png"/ id="logo">
+        <div class="reveal">
+
+            <div class="slides">
+                <section data-markdown>
+                    ## Rumors and Raptors
+                    
+                    ### Tales of Signaling at TokBox
+                    
+                    > Adam Ullman
+                    
+                    > [adam@tokbox.com](mailto:adam@tokbox.com)
+                    
+                    > [@aullman](http://twitter.com/aullman)
+                    
+                    > Slides - [aullman.github.io/webrtc-developer-meetup-rumor/](http://aullman.github.io/webrtc-developer-meetup-rumor/)
+                    
+                </section>
+                
+                <section data-markdown>
+                    Overview
+                    -----
+                    
+                    * In the beginning : Flash based Shared-Object signaling
+                    * OpenTok : Signaling in the OpenTok Platform
+                    * Evaluating Alternatives : SIP & XMPP
+                    * Introducing Rumor/Raptor : Our signaling stack
+                    * Using Signaling in your OpenTok Apps
+                    * Coming Soon : RESTful Signaling
+                </section>
+                <section>
+                    <section data-markdown>
+                        In The Beginning : Shared-Objects
+                        -------
+                    
+                        * Simple Chat Application
+                        * Mostly 1:1, some few to few
+                        * Using Flash Media Server and then Wowza
+                        * Shared Objects were easy and did the trick
+                    </section>
+                    <section data-markdown>
+                        Large Scale Video Meetings - March 2010
+                        -------
+                        
+                        ![Video Meeting](img/broadcast-chat-.png)
+                    </section>
+                    <section data-markdown>
+                        Broadcast - March 2010
+                        ------
+                    
+                        ![Broadcast video chat](img/tokbox-broadcast-chat-1-620x438.png)
+                    </section>
+                    <section data-markdown>
+                        Scale Limits
+                        --------
+                        
+                        * Couldn't handle more than a few hundred participants
+                        * That was OK though
+                    </section>
+                </section>
+                
+                <section>
+                    <section data-markdown>
+                        OpenTok - November 2010
+                        -------
+                    
+                        * Officially announced OpenTok as a Platform
+                        * Raised series C funding based on OpenTok platform
+                        * Stopped focusing on TokBox Chat Product
+                        * Flash-based Video Chat Platform
+                        * Still using Shared-Objects :(
+                    </section>
+                    
+                    <section>
+                        <h2>TokShow - December 2011</h2>
+
+                        <ul>
+                            <li>GroupLove ~ 100 participants</li>
+                        </ul>
+                        <br><br><br>
+                        <iframe width="640" height="480" src="//www.youtube.com/embed/5m7gJqZ9Qrw" frameborder="0" allowfullscreen></iframe>
+                    </section>
+                    <section data-markdown>
+                        Scott McCreery (American Idol)
+                        -------
+                        
+                        * ~ 400 participants
+                        
+                        ![Scott McCreery TokShow](img/TokShow-AOTW-pic.png)
+                    </section>
+                    <section data-markdown>
+                        Haley Reinhart (American Idol)
+                        ------
+                        
+                        * ~ 800 participants
+                        
+                        ![HaleyReinhart TokShow](img/HaleyReinhartTokShow.png)
+                    </section>
+                    <section data-markdown>
+                        Mindless Behavior
+                        --------
+                        
+                        * Over 5000 participants!
+                        
+                        ![Mindless Behavior](img/MindlessBehaviorTokShow.png)
+                    </section>
+                    <section data-markdown>
+                        Stoked
+                        -----
+                        
+                        ![Me with Mindless](img/me-with-mindless.jpg)
+                    </section>
+                </section>
+                <section>
+                    <section data-markdown>
+                        Evaluating Alternatives
+                        --------
+                    
+                        * XMPP
+                            * Tried OpenFire and ejabberd
+                            * Complicated, lots of extensions to support what we needed
+                            * Lots of stuff in there we didn't need
+                            * XML is heavy vs. JSON
+                            * Couldn't get it to scale easily to the thousands that we needed
+                            * Didn't need to interoperate with other XMPP services
+                        * SIP
+                            * Figured it wasn't suited to our broadcast use-case
+                            * Didn't need to interoperate with other SIP services
+                            * Didn't put a lot of thought into it
+                    </section>
+                    <section data-markdown>
+                        Implement it ourselves
+                        -------
+                    
+                        * Signaling is core to our platform, worth the investment
+                        * Tailored to our use-case
+                        * No black boxes
+                        * Easier to extend to support lots of endpoints (eg. WebSockets, Raw Sockets, REST)
+                        * We can make it light weight, fast and scalable
+                    </section>
+                </section>
+                <section>
+                    <section data-markdown>
+                        Introducing Rumor / Raptor : Our signaling stack
+                        --------
+                        
+                        * Rumor - Lightweight binary messaging protocol
+                        * Raptor - JSON based message protocol
+                    </section>
+                    <section data-markdown>
+                        Rumor
+                        -----
+                        
+                        * Lightweight binary protocol for the exchange of messages.
+                        * The client creates and maintains a messaging channel between itself and a Rumor server. 
+                        * pub/sub-based communications, subscribe to topics.
+                        * Fast inter-server communication channel
+                    </section>
+                    <section data-markdown>
+                        Rumor Message Types
+                        -------
+                        
+                        * CONNECT
+                        * DISCONNECT
+                        * SUBSCRIBE - Subscribe to a topic (unique string)
+                        * UNSUBSCRIBE - Unsubscribe from a topic
+                        * MESSAGE - Send or received messages
+                            * size
+                            * fromAddress
+                            * toAddresses - can be connectionIds or topics
+                            * payload - the contents of the message
+                    </section>
+                    <section data-markdown>
+                        Raptor
+                        ------
+                        
+                        * JSON based message protocol
+                        * Can be sent via any protocol, in the payload of Rumor messages or even HTTP.
+                        * Provides OpenTok primitives with simple CRUD operations
+                            * Sessions
+                            * Connections
+                            * Streams
+                            * ...
+                        * Provides JSEP messaging protocol
+                        * Provides ability to send arbitrary signals
+                        
+                    </section>
+                    <section data-markdown>
+                        Example Raptor Message
+                        -------
+                        
+                        ```
+                        Rumor Message Type: MESSAGE
+                        Rumor ToAddress: SYMPHONY_ADDRESS
+                        Rumor Header : Content-Type : application/x-raptor+v2,
+                            TRANSACTION-ID : “unique_correlation_id”,
+                            X-TB-FROM-ADDRESS : “CLIENT_ADDRESS”
+                        {
+                            "method": “create / read / update / delete”,
+                            “uri”: “/v2/partner / APIKEY / session / SESSION_ID / stream / STREAM_ID”“ content”:
+                            {
+                                "key”: “value”
+                            }
+                        }
+                        ```
+                    </section>
+                </section>
+                <section>
+                    <section data-markdown>
+                        Using Signaling in your OpenTok Apps
+                        ------------
+                        
+                        ```javascript
+                        session.signal({
+                            to: connection.connectionId,
+                            type: 'foo',
+                            data: 'bar'
+                        });
+                        
+                        session.on('signal:foo', function(event) {
+                            alert('You received some foo! ' + event.data);
+                        });
+                        ```
+                    </section>
+                    <section>
+                        <h2>Signal Demo</h2>
+                        <ul id='signals'></ul>
+        
+                        <script src="//www-dev.tokbox.com/webrtc/v2.2/js/TB.min.js" type="text/javascript" charset="utf-8"></script>
+                        <script type="text/javascript" charset="utf-8">
+                        var sessionId = '1_MX4xMTI3fn5TdW4gTWFyIDMwIDIxOjA1OjU5IFBEVCAyMDE0fjAuNjQ0NDI1OX4',
+                            token = 'T1==cGFydG5lcl9pZD0xMTI3JnNpZz0yMzQ0NmEyNDUxNmE0YTVlZTJkODU1Yjg4OTNkMDE5ZGIyNjU0YTQ1OmV4cGlyZV90aW1lPTEzOTg3ODM5NTkmbm9uY2U9NDk4NzkyJmNyZWF0ZV90aW1lPTEzOTYyMzg3NTkmcm9sZT1tb2RlcmF0b3Imc2Vzc2lvbl9pZD0xX01YNHhNVEkzZm41VGRXNGdUV0Z5SURNd0lESXhPakExT2pVNUlGQkVWQ0F5TURFMGZqQXVOalEwTkRJMU9YNA==',
+                            apiKey = '1127',
+                            session = TB.initSession(apiKey, sessionId),
+                            signals = document.querySelector('#signals');
+
+                        session.on('signal', function (event) {
+                            var li = document.createElement('li');
+                            li.innerHTML = "type: " + event.type.replace('signal:', '') + " data: " + event.data;
+                            signals.appendChild(li);
+                        });
+        
+                        session.connect(token);
+                        </script>
+                    </section>
+                </section>
+                <section data-markdown>
+                    Coming Soon: RESTful Signaling
+                    -------
+                    
+                    * Send Signals over HTTP
+                    ```
+                    $ curl -H "X-TB-PARTNER-AUTH:APIKEY:SECRET"
+                        https://anvil.opentok.com/v2/partner/1127/session/SESSION_ID/signal
+                        -H "Content-Type: application/json"
+                        -d '{ "type": "demo", "data": "What!? HTTP Signaling!?"}'
+                    ```
+                    * Subscribe to Session events on your server using HTTP Callbacks
+                        * Receive signals
+                        * Stream created
+                        * Connection created
+                        * ...
+                </section>
+            </div>
+
+        </div>
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.min.js"></script>
+
+        <script>
+
+        Reveal.initialize({
+            dependencies: [
+                { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+            ]
+        });
+
+        </script>
+
+	</body>
+</html>

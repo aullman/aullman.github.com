@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <title>Signal Demo</title>
+    </head>
+    <body>
+        <ul id='signals'></ul>
+        
+        <script src="//www-dev.tokbox.com/webrtc/v2.2/js/TB.min.js" type="text/javascript" charset="utf-8"></script>
+        <script type="text/javascript" charset="utf-8">
+        var sessionId = '1_MX4xMTI3fn5TdW4gTWFyIDMwIDIxOjA1OjU5IFBEVCAyMDE0fjAuNjQ0NDI1OX4',
+            token = 'T1==cGFydG5lcl9pZD0xMTI3JnNpZz0yMzQ0NmEyNDUxNmE0YTVlZTJkODU1Yjg4OTNkMDE5ZGIyNjU0YTQ1OmV4cGlyZV90aW1lPTEzOTg3ODM5NTkmbm9uY2U9NDk4NzkyJmNyZWF0ZV90aW1lPTEzOTYyMzg3NTkmcm9sZT1tb2RlcmF0b3Imc2Vzc2lvbl9pZD0xX01YNHhNVEkzZm41VGRXNGdUV0Z5SURNd0lESXhPakExT2pVNUlGQkVWQ0F5TURFMGZqQXVOalEwTkRJMU9YNA==',
+            apiKey = '1127',
+            session = TB.initSession(apiKey, sessionId),
+            signals = document.querySelector('#signals');
+
+        session.on('signal', function (event) {
+            var li = document.createElement('li');
+            li.innerHTML = "type: " + event.type.replace('signal:', '') + " data: " + event.data;
+            signals.appendChild(li);
+        });
+        
+        session.connect(token);
+        </script>
+    </body>
+</html>
