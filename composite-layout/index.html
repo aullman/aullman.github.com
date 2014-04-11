@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <title>Composite Layout</title>
+        <script src="http://static.opentok.com/webrtc/v2.2/js/TB.min.js" type="text/javascript" charset="utf-8"></script><script src="bower_components/jquery/dist/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+        
+        <script src="bower_components/opentok-layout-js/opentok-layout.js" type="text/javascript" charset="utf-8"></script>
+        <style type="text/css" media="screen">
+        #container {
+            width: 640px;
+            height: 480px;
+            background-color: #000;
+            position: relative;
+        }
+        #container > div {
+            background-color: #ccc;
+            border: 2px solid #000;
+        }
+        </style>
+    </head>
+    <body>
+        <div id="controls">
+            <input type="button" name="add" value="add" id="add" onclick="addEl()">
+            <input type="button" name="remove" value="remove" id="remove" onclick="removeEl()">
+            <form action="">
+              <input type="radio" id="onebig" name="layout" value="onebig" onclick="radioClick(this)">One Big Element<br>
+              <input type="radio" id="allsame" name="layout" value="allsame" checked="true" onclick="radioClick(this)">All the same size
+        </form>
+        <div id="container">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        
+        <script type="text/javascript" charset="utf-8">
+        var container = document.querySelector("#container");
+        var layout = TB.initLayoutContainer(container, {
+            fixedRatio: true,
+            bigFixedRatio: true,
+            animate: true
+        }).layout;
+        
+        function radioClick(radio) {
+            container.querySelector("div").className = radio.value === "onebig" ? "OT_big" : "";
+            layout();
+        }
+        
+        function addEl() {
+            container.appendChild(document.createElement("div"));
+            layout();
+        }
+        
+        function removeEl() {
+            container.removeChild(container.children[container.children.length-1]);
+            layout();
+        }
+        
+        
+        </script>
+    </body>
+</html>
